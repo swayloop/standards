@@ -1,0 +1,20 @@
+{
+  "name": "swayloop-app",
+  "version": "1.0.0",
+  "description": "TODO: 한 줄 설명",
+  "private": true,
+  "scripts": {
+    "prepare": "husky",
+    "preinstall": "npx only-allow pnpm"
+  },
+  "packageManager": "pnpm@10.18.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.4.3",
+    "@commitlint/config-conventional": "^20.4.3",
+    "@swayloop/commitlint-config": "^0.2.0",
+    "husky": "^9.1.7"
+  }
+}

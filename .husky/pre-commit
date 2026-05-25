@@ -1,0 +1,18 @@
+# pre-commit 훅 템플릿.
+# 프로젝트의 lint/format 명령을 추가하세요.
+#
+# 예 (frontend):
+#   FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js|jsx)$')
+#   if [ -n "$FILES" ]; then
+#     pnpm exec eslint --max-warnings 0 $FILES
+#     pnpm exec prettier --check $FILES
+#   fi
+#
+# 예 (Python with uv):
+#   FILES=$(git diff --cached --name-only --diff-filter=ACM | grep '\.py$')
+#   if [ -n "$FILES" ]; then
+#     uv run ruff check $FILES
+#     uv run ruff format --check $FILES
+#   fi
+
+exit 0
