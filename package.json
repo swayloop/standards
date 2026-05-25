@@ -1,20 +1,60 @@
 {
-  "name": "swayloop-app",
-  "version": "1.0.0",
-  "description": "TODO: 한 줄 설명",
-  "private": true,
+  "name": "@swayloop/standards",
+  "version": "0.0.0",
+  "description": "CLI to apply swayloop shared configs (tsconfig/eslint/prettier) to a project",
+  "type": "module",
+  "bin": {
+    "swayloop-standards": "dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "swayloop",
+    "standards",
+    "cli",
+    "config",
+    "init",
+    "tsconfig",
+    "eslint",
+    "prettier"
+  ],
+  "author": "swayloop",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swayloop/standards.git"
+  },
+  "bugs": {
+    "url": "https://github.com/swayloop/standards/issues"
+  },
+  "homepage": "https://github.com/swayloop/standards#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "prepare": "husky",
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "build": "tsc",
+    "dev": "tsx src/cli.ts",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "pnpm build"
   },
   "packageManager": "pnpm@10.18.0",
   "engines": {
     "node": ">=20"
   },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0"
+  },
   "devDependencies": {
     "@commitlint/cli": "^20.4.3",
     "@commitlint/config-conventional": "^20.4.3",
     "@swayloop/commitlint-config": "^0.2.0",
-    "husky": "^9.1.7"
+    "@types/node": "^22.10.0",
+    "husky": "^9.1.7",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
   }
 }

@@ -1,44 +1,52 @@
-# swayloop-template-node
+# @swayloop/standards
 
-swayloop org 의 Node 프로젝트 부트스트랩 템플릿. husky + commitlint + release-please + reusable workflows 가 미리 셋업되어 있습니다.
+swayloop org 의 Tier 1 공통 config (`tsconfig` / `eslint` / `prettier`) 을 프로젝트에 한 번에 적용·갱신하는 CLI.
 
-## 새 프로젝트로 시작하기
+## 적용 명령 (consumer 프로젝트에서)
 
 ```bash
-npx degit swayloop/template-node my-app
-cd my-app
-git init && git checkout -b main
-pnpm install
-git add -A && git commit -m "chore: bootstrap from swayloop/template-node"
+pnpm dlx @swayloop/standards apply
 ```
 
-그 다음:
+옵션:
 
-1. `package.json` 의 `name`, `description` 수정
-2. GitHub 에 레포 생성: `gh repo create swayloop/my-app --private --source=. --remote=origin --push`
-3. 첫 브랜치는 `git checkout -b dev` 로 만들고 dev 를 디폴트 브랜치로 설정
-4. 시크릿 추가: `gh secret set CLAUDE_CODE_OAUTH_TOKEN -R swayloop/my-app` (claude 워크플로우 쓸 경우)
+```bash
+pnpm dlx @swayloop/standards apply --dry-run        # 미리보기
+pnpm dlx @swayloop/standards apply --cwd path/to    # 다른 디렉토리에 적용
+pnpm dlx @swayloop/standards apply --no-install     # 패키지 설치 skip (이미 설치된 경우)
+```
 
-## 무엇이 들어있나
+## apply 가 하는 일
 
-| 파일 | 역할 |
-|---|---|
-| `.husky/commit-msg` | commitlint 검사 |
-| `.husky/pre-push` | 브랜치 네이밍 규칙 강제 |
-| `.husky/pre-commit` | (스텁) 프로젝트 lint/format 추가 |
-| `commitlint.config.js` | `@swayloop/commitlint-config` extend |
-| `.nvmrc` | Node 20 |
-| `release-please-config.json`, `.release-please-manifest.json` | 릴리즈 자동화 |
-| `.github/workflows/release-please.yml` | org reusable 호출 |
-| `.github/workflows/auto-close-issues.yml` | org reusable 호출 |
-| `.github/workflows/claude-mention.yml` | `@claude` 멘션 응답 (org reusable) |
-| `.github/workflows/ci.yml` | lint/build/test (스크립트 있을 때만 실행) |
+1. **Tier 1 패키지 install** (`pnpm add -D`):
+   - `@swayloop/tsconfig-base`
+   - `@swayloop/prettier-config`
+   - `@swayloop/eslint-config`
+   - `eslint`, `prettier`, `typescript` (peer)
+
+2. **`tsconfig.json`**:
+   - 없으면 → `extends: "@swayloop/tsconfig-base/base.json"` 으로 생성
+   - 있으면 → 이미 extend 되어 있는지 확인, 아니면 힌트만 출력 (덮어쓰지 않음)
+
+3. **`eslint.config.js`**:
+   - 없으면 → `import swayloopConfig from '@swayloop/eslint-config'` 로 생성
+   - 있으면 → skip (덮어쓰지 않음)
+
+4. **`package.json` prettier 필드 패치**:
+   - `"prettier": "@swayloop/prettier-config"` 추가/유지
+
+5. **`.prettierrc*` 존재 시 경고** — package.json prettier 필드와 충돌할 수 있어 제거 권장.
+
+## 멱등성
+
+같은 명령을 여러 번 돌려도 안전. 이미 적용된 항목은 skip, 사용자 커스텀 파일은 보존.
+
+## 추가 안 하는 것
+
+- husky / commitlint 설정 — 별도 `@swayloop/commitlint-config` 사용 (이미 적용된 repo 가정)
+- AGENTS.md / CLAUDE.md — 프로젝트별 내용 다르므로 손대지 않음
+- release-please 워크플로 — `swayloop/template-node` 에서 가져옴
 
 ## 표준
 
 브랜치/커밋/릴리즈 규칙은 [swayloop/.github](https://github.com/swayloop/.github/blob/main/docs/workflow.md) 참고.
-
-- 브랜치: `feature → dev → main`
-- 브랜치명: `<type>/<issue#>-<desc>`
-- 커밋: Conventional Commits
-- 릴리즈: dev → main 머지 시 release-please 가 자동 처리
